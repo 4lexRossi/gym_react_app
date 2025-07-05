@@ -39,16 +39,20 @@ const WeekOverview = ({ workoutData }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {daysOfWeek.map((day) => {
             const exerciseCount = getExerciseCount(day.key);
+            const completedCount = getCompletedCount(day.key);
             const totalSets = getTotalSets(day.key);
             const hasWorkout = exerciseCount > 0;
+            const isFullyCompleted = hasWorkout && completedCount === exerciseCount;
 
             return (
               <Card 
                 key={day.key} 
                 className={`cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${
-                  hasWorkout 
-                    ? 'border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50' 
-                    : 'border-gray-200 bg-white hover:bg-gray-50'
+                  isFullyCompleted
+                    ? 'border-green-200 bg-gradient-to-br from-green-50 to-emerald-50'
+                    : hasWorkout 
+                      ? 'border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50' 
+                      : 'border-gray-200 bg-white hover:bg-gray-50'
                 }`}
                 onClick={() => handleDayClick(day.key)}
               >
@@ -57,11 +61,18 @@ const WeekOverview = ({ workoutData }) => {
                     <CardTitle className="text-2xl font-bold text-gray-900">
                       {day.short}
                     </CardTitle>
-                    {hasWorkout && (
-                      <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                        {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''}
-                      </Badge>
-                    )}
+                    <div className="flex items-center space-x-2">
+                      {hasWorkout && (
+                        <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                          {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''}
+                        </Badge>
+                      )}
+                      {isFullyCompleted && (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                          ✓ Done
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                   <CardDescription className="text-gray-600 font-medium">
                     {day.name}
@@ -71,13 +82,20 @@ const WeekOverview = ({ workoutData }) => {
                   {hasWorkout ? (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">Progress:</span>
+                        <span className="font-bold text-green-600">{completedCount}/{exerciseCount} completed</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-600">Total Sets:</span>
                         <span className="font-bold text-blue-600">{totalSets}</span>
                       </div>
                       <div className="space-y-1">
                         {workoutData[day.key]?.slice(0, 3).map((exercise, index) => (
-                          <div key={index} className="text-sm text-gray-700 truncate">
-                            {exercise.name} ({exercise.sets}x{exercise.reps})
+                          <div key={index} className={`text-sm truncate flex items-center space-x-2 ${
+                            exercise.completed ? 'text-green-600' : 'text-gray-700'
+                          }`}>
+                            {exercise.completed && <span className="text-green-500">✓</span>}
+                            <span>{exercise.name} ({exercise.sets}x{exercise.reps})</span>
                           </div>
                         ))}
                         {workoutData[day.key]?.length > 3 && (
