@@ -1,52 +1,78 @@
-import { useEffect } from "react";
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import WeekOverview from './components/WeekOverview';
+import DayView from './components/DayView';
+import { loadWorkoutData, saveWorkoutData, addExercise, updateExercise, deleteExercise } from './data/mockData';
+import { Toaster } from './components/ui/toaster';
+import { useToast } from './hooks/use-toast';
+import './App.css';
 
 function App() {
+  const [workoutData, setWorkoutData] = useState({});
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const data = loadWorkoutData();
+    setWorkoutData(data);
+  }, []);
+
+  const handleUpdateWorkout = (day, action, exerciseId, exerciseData) => {
+    let updatedData = { ...workoutData };
+
+    switch (action) {
+      case 'add':
+        const newExercise = addExercise(day, exerciseData);
+        updatedData[day] = [...(updatedData[day] || []), newExercise];
+        toast({
+          title: "Exercise Added",
+          description: `Added ${exerciseData.name} to ${day}`,
+        });
+        break;
+      case 'update':
+        updateExercise(day, exerciseId, exerciseData);
+        updatedData[day] = updatedData[day].map(exercise => 
+          exercise.id === exerciseId ? { ...exercise, ...exerciseData } : exercise
+        );
+        toast({
+          title: "Exercise Updated",
+          description: `Updated ${exerciseData.name}`,
+        });
+        break;
+      case 'delete':
+        deleteExercise(day, exerciseId);
+        updatedData[day] = updatedData[day].filter(exercise => exercise.id !== exerciseId);
+        toast({
+          title: "Exercise Deleted",
+          description: "Exercise has been removed from your workout",
+        });
+        break;
+      default:
+        break;
+    }
+
+    setWorkoutData(updatedData);
+  };
+
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
+          <Route 
+            path="/" 
+            element={<WeekOverview workoutData={workoutData} />} 
+          />
+          <Route 
+            path="/day/:dayKey" 
+            element={
+              <DayView 
+                workoutData={workoutData} 
+                onUpdateWorkout={handleUpdateWorkout} 
+              />
+            } 
+          />
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </div>
   );
 }
