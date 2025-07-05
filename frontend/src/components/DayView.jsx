@@ -16,6 +16,7 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
   const navigate = useNavigate();
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const [editingExercise, setEditingExercise] = useState(null);
+  const [exerciseToDelete, setExerciseToDelete] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     sets: '',
