@@ -102,7 +102,7 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
             </h1>
             <div className="flex items-center space-x-4">
               <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                {exercises.length} exercise{exercises.length !== 1 ? 's' : ''}
+                {exercises.length}/10 exercises
               </Badge>
               <Badge variant="secondary" className="bg-green-100 text-green-800">
                 {getTotalSets()} total sets
