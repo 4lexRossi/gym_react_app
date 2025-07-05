@@ -7,6 +7,8 @@ import { Label } from './ui/label';
 import { Badge } from './ui/badge';
 import { Checkbox } from './ui/checkbox';
 import { Separator } from './ui/separator';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
+import { Edit, Trash2, Plus } from 'lucide-react';
 import { daysOfWeek } from '../data/mockData';
 
 const DayView = ({ workoutData, onUpdateWorkout }) => {
