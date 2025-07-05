@@ -45,11 +45,18 @@ export const loadWorkoutData = () => {
 
 export const addExercise = (day, exercise) => {
   const data = loadWorkoutData();
+  const dayExercises = data[day] || [];
+  
+  // Enforce 10 exercise limit per day
+  if (dayExercises.length >= 10) {
+    throw new Error('Maximum 10 exercises per day reached');
+  }
+  
   const newExercise = {
     id: Date.now(),
     ...exercise
   };
-  data[day] = [...(data[day] || []), newExercise];
+  data[day] = [...dayExercises, newExercise];
   saveWorkoutData(data);
   return newExercise;
 };
