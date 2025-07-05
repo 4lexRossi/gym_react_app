@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import WeekOverview from './components/WeekOverview';
 import DayView from './components/DayView';
-import { loadWorkoutData, saveWorkoutData, addExercise, updateExercise, deleteExercise } from './data/mockData';
+import { loadWorkoutData, saveWorkoutData, addExercise, updateExercise, deleteExercise, toggleExerciseCompletion } from './data/mockData';
 import { Toaster } from './components/ui/toaster';
 import { useToast } from './hooks/use-toast';
 import './App.css';
