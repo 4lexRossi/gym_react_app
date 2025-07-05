@@ -54,11 +54,20 @@ export const addExercise = (day, exercise) => {
   
   const newExercise = {
     id: Date.now(),
+    completed: false,
     ...exercise
   };
   data[day] = [...dayExercises, newExercise];
   saveWorkoutData(data);
   return newExercise;
+};
+
+export const toggleExerciseCompletion = (day, exerciseId) => {
+  const data = loadWorkoutData();
+  data[day] = data[day].map(exercise => 
+    exercise.id === exerciseId ? { ...exercise, completed: !exercise.completed } : exercise
+  );
+  saveWorkoutData(data);
 };
 
 export const updateExercise = (day, exerciseId, updates) => {
