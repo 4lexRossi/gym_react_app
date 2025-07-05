@@ -40,15 +40,20 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
       reps: parseInt(formData.reps)
     };
 
-    if (editingExercise) {
-      onUpdateWorkout(dayKey, 'update', editingExercise.id, exerciseData);
-      setEditingExercise(null);
-    } else {
-      onUpdateWorkout(dayKey, 'add', null, exerciseData);
-    }
+    try {
+      if (editingExercise) {
+        onUpdateWorkout(dayKey, 'update', editingExercise.id, exerciseData);
+        setEditingExercise(null);
+      } else {
+        onUpdateWorkout(dayKey, 'add', null, exerciseData);
+      }
 
-    setFormData({ name: '', sets: '', reps: '' });
-    setIsAddingExercise(false);
+      setFormData({ name: '', sets: '', reps: '' });
+      setIsAddingExercise(false);
+    } catch (error) {
+      // Handle the 10 exercise limit error
+      alert(error.message);
+    }
   };
 
   const handleEdit = (exercise) => {
