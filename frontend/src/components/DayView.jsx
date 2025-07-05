@@ -220,13 +220,6 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
                 </div>
                 <h3 className="text-xl font-semibold text-gray-700 mb-2">No exercises yet</h3>
                 <p className="text-gray-500 mb-4">Start building your workout by adding your first exercise!</p>
-                <Button 
-                  onClick={() => setIsAddingExercise(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Add Your First Exercise</span>
-                </Button>
               </CardContent>
             </Card>
           ) : (
@@ -306,6 +299,21 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
               </Card>
             ))
           )}
+          
+          {/* Add Exercise Button */}
+          <Button 
+            onClick={() => setIsAddingExercise(true)}
+            disabled={exercises.length >= 10}
+            variant="outline"
+            className={`w-full py-4 border-2 border-dashed transition-all flex items-center justify-center space-x-2 ${
+              exercises.length >= 10 
+                ? 'border-gray-300 text-gray-400 cursor-not-allowed bg-gray-50' 
+                : 'border-blue-300 text-blue-600 hover:border-blue-400 hover:bg-blue-50'
+            }`}
+          >
+            <Plus className="w-5 h-5" />
+            <span>{exercises.length >= 10 ? 'Maximum 10 Exercises Reached' : 'Exercise'}</span>
+          </Button>
         </div>
       </div>
 
