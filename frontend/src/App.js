@@ -55,6 +55,17 @@ function App() {
           description: "Exercise has been removed from your workout",
         });
         break;
+      case 'toggle':
+        toggleExerciseCompletion(day, exerciseId);
+        updatedData[day] = updatedData[day].map(exercise => 
+          exercise.id === exerciseId ? { ...exercise, completed: !exercise.completed } : exercise
+        );
+        const exercise = updatedData[day].find(e => e.id === exerciseId);
+        toast({
+          title: exercise.completed ? "Exercise Completed!" : "Exercise Marked Incomplete",
+          description: `${exercise.name} ${exercise.completed ? 'completed' : 'marked as incomplete'}`,
+        });
+        break;
       default:
         break;
     }
