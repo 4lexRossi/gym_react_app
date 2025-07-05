@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Badge } from './ui/badge';
+import { Checkbox } from './ui/checkbox';
 import { Separator } from './ui/separator';
 import { daysOfWeek } from '../data/mockData';
 
@@ -70,10 +71,18 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
     onUpdateWorkout(dayKey, 'delete', exerciseId);
   };
 
+  const handleToggleComplete = (exerciseId) => {
+    onUpdateWorkout(dayKey, 'toggle', exerciseId);
+  };
+
   const handleCancel = () => {
     setIsAddingExercise(false);
     setEditingExercise(null);
     setFormData({ name: '', sets: '', reps: '' });
+  };
+
+  const handleDayNavigation = (newDayKey) => {
+    navigate(`/day/${newDayKey}`);
   };
 
   const getTotalSets = () => {
@@ -84,9 +93,17 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
     return exercises.reduce((total, exercise) => total + (exercise.sets * exercise.reps), 0);
   };
 
+  const getCompletedCount = () => {
+    return exercises.filter(exercise => exercise.completed).length;
+  };
+
+  const getCurrentDayIndex = () => {
+    return daysOfWeek.findIndex(d => d.key === dayKey);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-20">
+      <div className="max-w-4xl mx-auto p-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -105,10 +122,10 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
                 {exercises.length}/10 exercises
               </Badge>
               <Badge variant="secondary" className="bg-green-100 text-green-800">
-                {getTotalSets()} total sets
+                {getCompletedCount()}/{exercises.length} completed
               </Badge>
               <Badge variant="secondary" className="bg-purple-100 text-purple-800">
-                {getTotalReps()} total reps
+                {getTotalSets()} total sets
               </Badge>
             </div>
           </div>
@@ -216,22 +233,37 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
             </Card>
           ) : (
             exercises.map((exercise, index) => (
-              <Card key={exercise.id} className="hover:shadow-lg transition-shadow">
+              <Card key={exercise.id} className={`hover:shadow-lg transition-all ${
+                exercise.completed ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'
+              }`}>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
+                      <Checkbox
+                        checked={exercise.completed}
+                        onCheckedChange={() => handleToggleComplete(exercise.id)}
+                        className="w-6 h-6"
+                      />
                       <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                         <span className="text-blue-600 font-bold">{index + 1}</span>
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-900">{exercise.name}</h3>
-                        <p className="text-gray-600">
+                        <h3 className={`text-xl font-semibold ${
+                          exercise.completed ? 'text-green-700 line-through' : 'text-gray-900'
+                        }`}>
+                          {exercise.name}
+                        </h3>
+                        <p className={`${
+                          exercise.completed ? 'text-green-600' : 'text-gray-600'
+                        }`}>
                           {exercise.sets} sets × {exercise.reps} reps
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Badge variant="outline" className="bg-gray-50">
+                      <Badge variant="outline" className={`${
+                        exercise.completed ? 'bg-green-50' : 'bg-gray-50'
+                      }`}>
                         {exercise.sets * exercise.reps} total reps
                       </Badge>
                       <Button
@@ -256,6 +288,42 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
               </Card>
             ))
           )}
+        </div>
+      </div>
+
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg">
+        <div className="max-w-4xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            {daysOfWeek.map((day, index) => {
+              const isActive = day.key === dayKey;
+              const exerciseCount = (workoutData[day.key] || []).length;
+              const completedCount = (workoutData[day.key] || []).filter(e => e.completed).length;
+              const isCompleted = exerciseCount > 0 && completedCount === exerciseCount;
+              
+              return (
+                <button
+                  key={day.key}
+                  onClick={() => handleDayNavigation(day.key)}
+                  className={`flex flex-col items-center space-y-1 px-3 py-2 rounded-lg transition-all ${
+                    isActive 
+                      ? 'bg-blue-100 text-blue-700' 
+                      : 'hover:bg-gray-100 text-gray-600'
+                  }`}
+                >
+                  <div className="relative">
+                    <span className="text-xs font-medium">{day.short}</span>
+                    {isCompleted && (
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full"></div>
+                    )}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {exerciseCount > 0 ? `${completedCount}/${exerciseCount}` : '-'}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
