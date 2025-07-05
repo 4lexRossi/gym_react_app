@@ -16,6 +16,10 @@ const WeekOverview = ({ workoutData }) => {
     return workoutData[dayKey]?.length || 0;
   };
 
+  const getCompletedCount = (dayKey) => {
+    return workoutData[dayKey]?.filter(exercise => exercise.completed).length || 0;
+  };
+
   const getTotalSets = (dayKey) => {
     return workoutData[dayKey]?.reduce((total, exercise) => total + exercise.sets, 0) || 0;
   };
