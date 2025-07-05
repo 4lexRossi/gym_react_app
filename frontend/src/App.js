@@ -21,12 +21,21 @@ function App() {
 
     switch (action) {
       case 'add':
-        const newExercise = addExercise(day, exerciseData);
-        updatedData[day] = [...(updatedData[day] || []), newExercise];
-        toast({
-          title: "Exercise Added",
-          description: `Added ${exerciseData.name} to ${day}`,
-        });
+        try {
+          const newExercise = addExercise(day, exerciseData);
+          updatedData[day] = [...(updatedData[day] || []), newExercise];
+          toast({
+            title: "Exercise Added",
+            description: `Added ${exerciseData.name} to ${day}`,
+          });
+        } catch (error) {
+          toast({
+            title: "Cannot Add Exercise",
+            description: error.message,
+            variant: "destructive",
+          });
+          return; // Don't update state if there's an error
+        }
         break;
       case 'update':
         updateExercise(day, exerciseId, exerciseData);
