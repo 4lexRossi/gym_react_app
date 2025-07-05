@@ -1,9 +1,7 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
 import { daysOfWeek } from '../data/mockData';
+import { Badge } from './ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 
 const WeekOverview = ({ workoutData }) => {
   const navigate = useNavigate();
@@ -45,13 +43,13 @@ const WeekOverview = ({ workoutData }) => {
             const isFullyCompleted = hasWorkout && completedCount === exerciseCount;
 
             return (
-              <Card 
-                key={day.key} 
+              <Card
+                key={day.key}
                 className={`cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${
                   isFullyCompleted
                     ? 'border-green-200 bg-gradient-to-br from-green-50 to-emerald-50'
-                    : hasWorkout 
-                      ? 'border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50' 
+                    : hasWorkout
+                      ? 'border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50'
                       : 'border-gray-200 bg-white hover:bg-gray-50'
                 }`}
                 onClick={() => handleDayClick(day.key)}
