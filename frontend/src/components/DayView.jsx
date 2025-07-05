@@ -234,9 +234,10 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
                 <p className="text-gray-500 mb-4">Start building your workout by adding your first exercise!</p>
                 <Button 
                   onClick={() => setIsAddingExercise(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  className="bg-blue-600 hover:bg-blue-700 text-white flex items-center space-x-2"
                 >
-                  Add Your First Exercise
+                  <Plus className="w-4 h-4" />
+                  <span>Add Your First Exercise</span>
                 </Button>
               </CardContent>
             </Card>
