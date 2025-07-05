@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import WeekOverview from './components/WeekOverview';
-import DayView from './components/DayView';
-import { loadWorkoutData, saveWorkoutData, addExercise, updateExercise, deleteExercise, toggleExerciseCompletion } from './data/mockData';
-import { Toaster } from './components/ui/toaster';
-import { useToast } from './hooks/use-toast';
+import { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import DayView from './components/DayView';
+import { Toaster } from './components/ui/toaster';
+import WeekOverview from './components/WeekOverview';
+import { addExercise, deleteExercise, loadWorkoutData, toggleExerciseCompletion, updateExercise } from './data/mockData';
+import { useToast } from './hooks/use-toast';
 
 function App() {
   const [workoutData, setWorkoutData] = useState({});
@@ -39,7 +39,7 @@ function App() {
         break;
       case 'update':
         updateExercise(day, exerciseId, exerciseData);
-        updatedData[day] = updatedData[day].map(exercise => 
+        updatedData[day] = updatedData[day].map(exercise =>
           exercise.id === exerciseId ? { ...exercise, ...exerciseData } : exercise
         );
         toast({
@@ -57,7 +57,7 @@ function App() {
         break;
       case 'toggle':
         toggleExerciseCompletion(day, exerciseId);
-        updatedData[day] = updatedData[day].map(exercise => 
+        updatedData[day] = updatedData[day].map(exercise =>
           exercise.id === exerciseId ? { ...exercise, completed: !exercise.completed } : exercise
         );
         const exercise = updatedData[day].find(e => e.id === exerciseId);
@@ -77,18 +77,18 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route 
-            path="/" 
-            element={<WeekOverview workoutData={workoutData} />} 
+          <Route
+            path="/"
+            element={<WeekOverview workoutData={workoutData} />}
           />
-          <Route 
-            path="/day/:dayKey" 
+          <Route
+            path="/day/:dayKey"
             element={
-              <DayView 
-                workoutData={workoutData} 
-                onUpdateWorkout={handleUpdateWorkout} 
+              <DayView
+                workoutData={workoutData}
+                onUpdateWorkout={handleUpdateWorkout}
               />
-            } 
+            }
           />
         </Routes>
       </BrowserRouter>

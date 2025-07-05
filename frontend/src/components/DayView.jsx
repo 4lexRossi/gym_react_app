@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Edit, Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { daysOfWeek } from '../data/mockData';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
+import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Checkbox } from './ui/checkbox';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Badge } from './ui/badge';
-import { Checkbox } from './ui/checkbox';
-import { Separator } from './ui/separator';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
-import { Edit, Trash2, Plus } from 'lucide-react';
-import { daysOfWeek } from '../data/mockData';
+import './DayView.css';
 
 const DayView = ({ workoutData, onUpdateWorkout }) => {
   const { dayKey } = useParams();
@@ -120,7 +120,7 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
               onClick={() => navigate('/')}
               className="mb-4 hover:bg-gray-100"
             >
-              ← Back to Week
+              ← Week days
             </Button>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
               {dayInfo?.name} Workout
@@ -139,8 +139,9 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
           </div>
         </div>
         {/* Exercise List */}
-        <div className="space-y-4">
+        <div className="space-y-4 no-exercise-added">
           {exercises.length === 0 ? (
+            <a onClick={() => setIsAddingExercise(true)}>
             <Card className="text-center py-12">
               <CardContent>
                 <div className="text-gray-400 mb-4">
@@ -150,8 +151,10 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
                 </div>
                 <h3 className="text-xl font-semibold text-gray-700 mb-2">No exercises yet</h3>
                 <p className="text-gray-500 mb-4">Start building your workout by adding your first exercise!</p>
+
               </CardContent>
             </Card>
+            </a>
           ) : (
             exercises.map((exercise, index) => (
               <Card key={exercise.id} className={`hover:shadow-lg transition-all ${
@@ -185,7 +188,7 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
                       <Badge variant="outline" className={`${
                         exercise.completed ? 'bg-green-50' : 'bg-gray-50'
                       }`}>
-                        {exercise.sets * exercise.reps}
+                        total reps {exercise.sets * exercise.reps}
                       </Badge>
                       <Button
                         variant="outline"
@@ -280,17 +283,17 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
                 </div>
                 <div className="flex space-x-3">
                   <Button
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    {editingExercise ? 'Update Exercise' : 'Add Exercise'}
-                  </Button>
-                  <Button
                     type="button"
                     variant="outline"
                     onClick={handleCancel}
                   >
                     Cancel
+                  </Button>
+                   <Button
+                    type="submit"
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    {'Confirm'}
                   </Button>
                 </div>
               </form>
@@ -300,7 +303,7 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
           {/* Add Exercise Button */}
           <Button
             onClick={() => setIsAddingExercise(true)}
-            disabled={exercises.length >= 10}
+            disabled={exercises.length >= 10 || editingExercise || isAddingExercise}
             variant="outline"
             className={`w-full py-4 border-2 border-dashed transition-all flex items-center justify-center space-x-2 ${
               exercises.length >= 10
