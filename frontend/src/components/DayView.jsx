@@ -114,9 +114,14 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
           </div>
           <Button 
             onClick={() => setIsAddingExercise(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
+            disabled={exercises.length >= 10}
+            className={`px-6 py-3 rounded-lg transition-colors ${
+              exercises.length >= 10 
+                ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
           >
-            Add Exercise
+            {exercises.length >= 10 ? 'Max 10 Exercises' : 'Add Exercise'}
           </Button>
         </div>
 
