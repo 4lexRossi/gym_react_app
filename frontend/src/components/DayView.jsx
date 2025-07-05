@@ -247,17 +247,17 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
               }`}>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-4 flex-1 min-w-0">
                       <Checkbox
                         checked={exercise.completed}
                         onCheckedChange={() => handleToggleComplete(exercise.id)}
-                        className="w-6 h-6"
+                        className="w-6 h-6 flex-shrink-0"
                       />
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                         <span className="text-blue-600 font-bold">{index + 1}</span>
                       </div>
-                      <div>
-                        <h3 className={`text-xl font-semibold ${
+                      <div className="flex-1 min-w-0">
+                        <h3 className={`text-xl font-semibold truncate ${
                           exercise.completed ? 'text-green-700 line-through' : 'text-gray-900'
                         }`}>
                           {exercise.name}
@@ -269,28 +269,48 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 flex-shrink-0">
                       <Badge variant="outline" className={`${
                         exercise.completed ? 'bg-green-50' : 'bg-gray-50'
                       }`}>
-                        {exercise.sets * exercise.reps} total reps
+                        {exercise.sets * exercise.reps}
                       </Badge>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleEdit(exercise)}
-                        className="hover:bg-blue-50"
+                        className="hover:bg-blue-50 w-10 h-10 p-0"
                       >
-                        Edit
+                        <Edit className="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDelete(exercise.id)}
-                        className="hover:bg-red-50 text-red-600"
-                      >
-                        Delete
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="hover:bg-red-50 text-red-600 w-10 h-10 p-0"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Exercise</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to delete "{exercise.name}"? This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction 
+                              onClick={() => handleDelete(exercise.id)}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </CardContent>
