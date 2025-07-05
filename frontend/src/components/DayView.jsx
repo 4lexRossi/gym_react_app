@@ -72,6 +72,11 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
 
   const handleDelete = (exerciseId) => {
     onUpdateWorkout(dayKey, 'delete', exerciseId);
+    setExerciseToDelete(null);
+  };
+
+  const confirmDelete = (exercise) => {
+    setExerciseToDelete(exercise);
   };
 
   const handleToggleComplete = (exerciseId) => {
