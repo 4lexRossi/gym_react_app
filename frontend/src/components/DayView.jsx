@@ -115,8 +115,8 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => navigate('/')}
               className="mb-4 hover:bg-gray-100"
             >
@@ -138,76 +138,6 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
             </div>
           </div>
         </div>
-
-        {/* Add/Edit Exercise Form */}
-        {isAddingExercise && (
-          <Card className="mb-8 border-blue-200 bg-blue-50">
-            <CardHeader>
-              <CardTitle className="text-xl">
-                {editingExercise ? 'Edit Exercise' : 'Add New Exercise'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor="name">Exercise Name</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="e.g., Push-ups"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="sets">Sets</Label>
-                    <Input
-                      id="sets"
-                      name="sets"
-                      type="number"
-                      value={formData.sets}
-                      onChange={handleInputChange}
-                      placeholder="e.g., 3"
-                      min="1"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="reps">Reps</Label>
-                    <Input
-                      id="reps"
-                      name="reps"
-                      type="number"
-                      value={formData.reps}
-                      onChange={handleInputChange}
-                      placeholder="e.g., 12"
-                      min="1"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="flex space-x-3">
-                  <Button 
-                    type="submit" 
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    {editingExercise ? 'Update Exercise' : 'Add Exercise'}
-                  </Button>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={handleCancel}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Exercise List */}
         <div className="space-y-4">
           {exercises.length === 0 ? (
@@ -284,7 +214,7 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction 
+                            <AlertDialogAction
                               onClick={() => handleDelete(exercise.id)}
                               className="bg-red-600 hover:bg-red-700"
                             >
@@ -299,15 +229,82 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
               </Card>
             ))
           )}
-          
+          {/* Add/Edit Exercise Form */}
+        {isAddingExercise && (
+          <Card className="mb-8 border-blue-200 bg-blue-50">
+            <CardHeader>
+              <CardTitle className="text-xl">
+                {editingExercise ? 'Edit Exercise' : 'Add New Exercise'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="name">Exercise Name</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="e.g., Push-ups"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="sets">Sets</Label>
+                    <Input
+                      id="sets"
+                      name="sets"
+                      type="number"
+                      value={formData.sets}
+                      onChange={handleInputChange}
+                      placeholder="e.g., 3"
+                      min="1"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="reps">Reps</Label>
+                    <Input
+                      id="reps"
+                      name="reps"
+                      type="number"
+                      value={formData.reps}
+                      onChange={handleInputChange}
+                      placeholder="e.g., 12"
+                      min="1"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="flex space-x-3">
+                  <Button
+                    type="submit"
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    {editingExercise ? 'Update Exercise' : 'Add Exercise'}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        )}
           {/* Add Exercise Button */}
-          <Button 
+          <Button
             onClick={() => setIsAddingExercise(true)}
             disabled={exercises.length >= 10}
             variant="outline"
             className={`w-full py-4 border-2 border-dashed transition-all flex items-center justify-center space-x-2 ${
-              exercises.length >= 10 
-                ? 'border-gray-300 text-gray-400 cursor-not-allowed bg-gray-50' 
+              exercises.length >= 10
+                ? 'border-gray-300 text-gray-400 cursor-not-allowed bg-gray-50'
                 : 'border-blue-300 text-blue-600 hover:border-blue-400 hover:bg-blue-50'
             }`}
           >
@@ -326,14 +323,14 @@ const DayView = ({ workoutData, onUpdateWorkout }) => {
               const exerciseCount = (workoutData[day.key] || []).length;
               const completedCount = (workoutData[day.key] || []).filter(e => e.completed).length;
               const isCompleted = exerciseCount > 0 && completedCount === exerciseCount;
-              
+
               return (
                 <button
                   key={day.key}
                   onClick={() => handleDayNavigation(day.key)}
                   className={`flex flex-col items-center space-y-1 px-3 py-2 rounded-lg transition-all ${
-                    isActive 
-                      ? 'bg-blue-100 text-blue-700' 
+                    isActive
+                      ? 'bg-blue-100 text-blue-700'
                       : 'hover:bg-gray-100 text-gray-600'
                   }`}
                 >
